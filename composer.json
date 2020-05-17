@@ -1,0 +1,20 @@
+{
+    "name": "temori/distancexport",
+    "description": "Data migration tool that can migrate data between databases with different structures.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Atsushi Inoue",
+            "email": "ai_log@aol.jp"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+    },
+    "autoload": {
+        "psr-4": {
+            "Temori\\Distancexport\\": "src/"
+        }
+    }
+}
