@@ -22,6 +22,10 @@ class Distancexport
      * @var \Temori\Distancexport\DataBases\BaseDriver
      */
     protected $source_db;
+    /**
+     * @var string
+     */
+    protected $no_data_msg = 'No record or no source columns.';
 
     /**
      * Distancexport constructor.
@@ -110,7 +114,11 @@ class Distancexport
                 // all columns of the corresponding table have been acquired, so insert the data.
                 if (!$param[0]) {
                     try {
-                        $this->insertData($target_table, $records, $uniformity);
+                        if ($records) {
+                            $this->insertData($target_table, $records, $uniformity);
+                        } else {
+                            $params[$key - 1][14] = $this->no_data_msg;
+                        }
                     } catch (\Exception $e) {
                         $params[$key - 1][14] = $e->getMessage();
                         $error_count++;
@@ -160,6 +168,8 @@ class Distancexport
                     $params[$last_key][14] = $e->getMessage();
                     $error_count++;
                 }
+            } else {
+                $params[$key - 1][14] = $this->no_data_msg;
             }
 
             if ($_POST['runtype'] === 'run' && !$error_count) {

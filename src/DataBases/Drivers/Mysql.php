@@ -22,7 +22,7 @@ class Mysql extends Connect implements BaseDriver
     {
         parent::__construct($type);
         // Ignore foregin keys temporarily.
-        $stmt = $this->pdo->prepare('SET FOREIGN_KEY_CHECKS = 0;');
+        $stmt = $this->pdo->query('SET FOREIGN_KEY_CHECKS = 0;');
         $stmt->execute();
     }
 
@@ -34,9 +34,15 @@ class Mysql extends Connect implements BaseDriver
     public function getTables() : array
     {
         $db_name = $this->type === 'destination' ? DX_DESTINATION_DB_DATABASE : DX_SOURCE_DB_DATABASE;
-        $stmt = $this->pdo->prepare('SHOW TABLES FROM ' . $db_name);
 
-        $stmt->execute();
+        $stmt = $this->pdo->prepare(
+            'SELECT table_name
+                    FROM information_schema.tables    
+                    WHERE table_type = \'BASE TABLE\' AND table_schema = ? 
+                    ORDER BY table_name ASC'
+        );
+
+        $stmt->execute([$db_name]);
         return array_column($stmt->fetchAll(\PDO::FETCH_NUM), 0);
     }
 
@@ -48,7 +54,7 @@ class Mysql extends Connect implements BaseDriver
      */
     public function getColumns($table) : array
     {
-        $stmt = $this->pdo->prepare('SHOW COLUMNS FROM ' . $table);
+        $stmt = $this->pdo->query('SHOW COLUMNS FROM `' . $table . '`');
 
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_NUM);
@@ -63,8 +69,8 @@ class Mysql extends Connect implements BaseDriver
      */
     public function getRecoeds($table, $column = []) : array
     {
-        $select = $column ? implode(',', $column) : '*';
-        $stmt = $this->pdo->prepare("SELECT {$select} FROM {$table}");
+        $select = $column ? '`' . implode('``,`', $column) . '`' : '*';
+        $stmt = $this->pdo->query("SELECT {$select} FROM `{$table}`");
 
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -80,22 +86,27 @@ class Mysql extends Connect implements BaseDriver
      */
     public function insert($table, $columns, $values)
     {
-        $values = array_reduce($values, function ($carry, $value) {
-            $value = '("' . implode('","', $value) . '")';
+        // Make placeholder array.
+        $values_placeholder = array_reduce($values, function ($carry, $value) {
+            $value = '(' . implode(',', array_fill(0, count($value), '?')) . ')';
             if (!$carry) $carry = [];
             $carry[] = $value;
             return $carry;
         });
+        $values_placeholder = implode(',', $values_placeholder);
 
-        $columns = implode(',', $columns);
-        $values = implode(',', $values);
+        $values = array_reduce($values, function ($carry, $value) {
+            return !$carry ? $value : array_merge($carry, $value);
+        });
+
+        $columns = '`' . implode('`,`', $columns) . '`';
 
         $stmt = $this->pdo->prepare("
-          INSERT INTO {$table} ({$columns}) 
-          VALUES $values
+          INSERT INTO `{$table}` ({$columns}) 
+          VALUES {$values_placeholder}
         ");
 
-        return $stmt->execute();
+        return $stmt->execute($values);
     }
 
     /**
