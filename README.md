@@ -1,6 +1,6 @@
 ## distancexport
 
-![https://img.shields.io/badge/license-MIT-green.svg](https://img.shields.io/badge/license-MIT-green.svg)![Packagist PHP Version Support (custom server)](https://img.shields.io/packagist/php-v/temori/distancexport) ![Packagist Version](https://img.shields.io/packagist/v/temori/distancexport) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/temori1919/distancexport)
+![https://img.shields.io/badge/license-MIT-green.svg](https://img.shields.io/badge/license-MIT-green.svg) ![Packagist PHP Version Support (custom server)](https://img.shields.io/packagist/php-v/temori/distancexport) ![Packagist Version](https://img.shields.io/packagist/v/temori/distancexport) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/temori1919/distancexport)
 
 Data migration tool between databases.
 
@@ -16,13 +16,12 @@ Data migration is possible regardless of RDB.
 
 - [Features](#Features)
 - [Installation](#Installation)
-
-* [Requirements](#Requirements)
-* [Usage](#Usage)
-* [Supported RDB driver types](＃Supported RDB driver types)
-* [Add RDB driver](#Add RDB driver) 
-* [Note](#Note)
-* [License](#License)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Supported RDB driver types](＃supported-rdb-driver-types)
+- [Add RDB driver](#add-rdb-driver) 
+- [Note](#note)
+- [License](#license)
 
 
 
