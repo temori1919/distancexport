@@ -87,6 +87,7 @@ composer require temori/distancexport --dev
   $dis = new \Temori\Distancexport\Distancexport();
   $dis->init();
   ```
+- If use FW, must create route `get` & `post`.
 
 - Open the above php file or controller url.
 
