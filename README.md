@@ -18,7 +18,7 @@ Data migration is possible regardless of RDB.
 - [Installation](#Installation)
 - [Requirements](#requirements)
 - [Usage](#usage)
-- [Supported RDB driver types](＃supported-rdb-driver-types)
+- [Supported RDB driver types](#supported-rdb-driver-types)
 - [Add RDB driver](#add-rdb-driver) 
 - [Note](#note)
 - [License](#license)
