@@ -2,9 +2,6 @@
 
 namespace Temori\Distancexport;
 
-ini_set('memory_limit', -1);
-ini_set('max_execution_time', -1);
-
 use Temori\Distancexport\DataBases\BaseDriver;
 
 /**
@@ -36,6 +33,9 @@ class Distancexport
      */
     public function __construct(BaseDriver $destination = null, BaseDriver $source = null)
     {
+        ini_set('memory_limit', -1);
+        ini_set('max_execution_time', -1);
+
         $boot = new Provider($destination, $source);
 
         $this->destination_db = $boot->getDbDriver('destination');
@@ -199,8 +199,18 @@ class Distancexport
     public function insertData($table, $records, $uniformity)
     {
         $columns = array_keys($records);
+
         // Process the array so that it can be easily saved in db.
-        $values = call_user_func_array('array_map', array_merge([null], $records));
+        $values = [];
+        $first = count(current($records));
+
+        for ($i = 0; $i < $first; $i++) {
+            $items = [];
+            foreach ($records as $column => $record) {
+                $items[':' . $column . $i] = $record[$i];
+            }
+            $values[] = $items;
+        }
 
         // Convert to multidimensional array,
         // if not valune is multidimensional arrays.
@@ -213,7 +223,7 @@ class Distancexport
             $array_cnt = count($values);
             foreach ($uniformity as $key => $item) {
                 for ($i = 0; $i < $array_cnt; $i++) {
-                    $values[$i][$key] = $item;
+                    $values[$i][':' . $key . $i] = $item;
                 }
                 $columns[] = $key;
             }

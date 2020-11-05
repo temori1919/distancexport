@@ -10,11 +10,16 @@
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "phpunit/phpunit": "^4.8"
+    },
+    "require-dev": {
+        "vlucas/phpdotenv": "^5.2"
     },
     "autoload": {
         "psr-4": {
-            "Temori\\Distancexport\\": "src/"
+            "Temori\\Distancexport\\": "src/",
+            "Temori\\Tests\\": "tests/"
         }
     }
 }

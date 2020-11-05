@@ -120,7 +120,7 @@ class Pgsql extends Connect implements BaseDriver
 
         // Make placeholder array.
         $values_placeholder = array_reduce($values, function ($carry, $value) {
-            $value = '(' . implode(',', array_fill(0, count($value), '?')) . ')';
+            $value = '(' . implode(',', array_keys($value)) . ')';
             if (!$carry) $carry = [];
             $carry[] = $value;
             return $carry;
